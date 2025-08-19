@@ -1,4 +1,5 @@
 import { Routes, Route, Link } from "react-router-dom";
+import Introduction from "./pages/Introduction";
 import WhatIsBudgeting from "./pages/WhatIsBudgeting";
 import Advantages from "./pages/Advantages";
 import Disadvantages from "./pages/Disadvantages";
@@ -6,7 +7,7 @@ import BudgetingStrategies from "./pages/BudgetingStrategies";
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900">
+    <div className="min-h-screen flex flex-col bg-gray-200 text-gray-900">
       {/* Navigation Bar */}
       <nav className="bg-white shadow-md px-6 py-4 flex items-center justify-between">
         {/* Logo / Brand */}
@@ -49,10 +50,10 @@ export default function App() {
         </div>
       </nav>
 
-
-      <main className="mx-auto max-w-5xl px-4 py-10">
+      {/*flex-1 ensures main takes the remaining height*/}
+      <main className="flex-1 mx-auto max-w-5xl px-4 py-10">
         <Routes>
-          <Route path="/" element={<h1 className="text-3xl font-bold">Welcome to Budgeting!</h1>} />
+          <Route path="/" element={<Introduction />} />
           <Route path="/what-is-budgeting" element={<WhatIsBudgeting />} />
           <Route path="/advantages" element={<Advantages />} />
           <Route path="/disadvantages" element={<Disadvantages />} />
