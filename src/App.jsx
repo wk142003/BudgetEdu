@@ -1,5 +1,8 @@
 import { Routes, Route, Link } from "react-router-dom";
-import Pillar1 from "./pages/pillar1";
+import WhatIsBudgeting from "./pages/WhatIsBudgeting";
+import Advantages from "./pages/Advantages";
+import Disadvantages from "./pages/Disadvantages";
+import BudgetingStrategies from "./pages/BudgetingStrategies";
 
 export default function App() {
   return (
@@ -20,10 +23,28 @@ export default function App() {
             Introduction
           </Link>
           <Link
-            to="/pillar1"
+            to="/what-is-budgeting"
             className="text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200"
           >
             What is Budgeting
+          </Link>
+          <Link
+            to="/advantages"
+            className="text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200"
+          >
+            Advantages
+          </Link>
+          <Link
+            to="/disadvantages"
+            className="text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200"
+          >
+            Disadvantages
+          </Link>
+          <Link
+            to="/budgeting-strategies"
+            className="text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200"
+          >
+            Budgeting Strategies
           </Link>
         </div>
       </nav>
@@ -32,7 +53,10 @@ export default function App() {
       <main className="mx-auto max-w-5xl px-4 py-10">
         <Routes>
           <Route path="/" element={<h1 className="text-3xl font-bold">Welcome to Budgeting!</h1>} />
-          <Route path="/pillar1" element={<Pillar1 />} />
+          <Route path="/what-is-budgeting" element={<WhatIsBudgeting />} />
+          <Route path="/advantages" element={<Advantages />} />
+          <Route path="/disadvantages" element={<Disadvantages />} />
+          <Route path="/budgeting-strategies" element={<BudgetingStrategies />} />
         </Routes>
       </main>
     </div>
