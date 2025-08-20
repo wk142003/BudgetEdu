@@ -51,7 +51,7 @@ export default function App() {
       </nav>
 
       {/*flex-1 ensures main takes the remaining height*/}
-      <main className="flex-1 mx-auto max-w-5xl px-4 py-10">
+      <main className="flex-1 mx-auto px-4 py-10">
         <Routes>
           <Route path="/" element={<Introduction />} />
           <Route path="/what-is-budgeting" element={<WhatIsBudgeting />} />
