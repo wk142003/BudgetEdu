@@ -20,7 +20,7 @@ const CardGrid = () => {
     };
 
     return (
-        <div className="grid grid-cols-4 gap-6 min-w-7xl mx-auto">
+        <div className="grid grid-cols-4 gap-6 w-full max-w-screen-xl">
             {categories.map((item, index) => (
                 <CardFlip
                     key={index}
