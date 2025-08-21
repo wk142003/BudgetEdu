@@ -4,7 +4,6 @@ import { Link, useLocation } from "react-router-dom";
 const BottomNav = () => {
     // Start by defining the page order
     const pages = [
-        { name: "Introduction", path: "/" },
         { name: "What is Budgeting", path: "/what-is-budgeting" },
         { name: "Advantages", path: "/advantages" },
         { name: "Disadvantages", path: "/disadvantages" },
@@ -15,7 +14,7 @@ const BottomNav = () => {
     const location = useLocation();
     const currIdx = pages.findIndex(page => page.path === location.pathname);
 
-    const prevPage = (currIdx < 0) ? pages[currIdx - 1] : null;
+    const prevPage = (currIdx < 0) ? null : pages[currIdx - 1];
     const nextPage = (currIdx < pages.length - 1) ? pages[currIdx + 1] : null;
     
     return (
