@@ -21,8 +21,8 @@ const CardFlip = ({category, details, isFlipped, onFlip}) => {
                 <div className="absolute w-full h-full bg-blue-500 text-white flex flex-col justify-center items-center rounded-lg shadow-md backface-hidden">
                     <h2 className="text-2xl font-bold text-center">{category}</h2>
                 </div>
-                {/* Back */}
-                <div className="absolute w-full h-full bg-blue-600 text-white flex flex-col justify-center items-center rounded-lg shadow-md backface-hidden p-4">
+                {/* Back : rotated such that it only shows on flipping (rotate-y-180) */}
+                <div className="absolute w-full h-full bg-blue-600 text-white flex flex-col justify-center items-center rounded-lg shadow-md backface-hidden rotate-y-180 p-4">
                     {/*list-disc: uses bullet points for the list, list-inside: places the bullet points in the list area*/}
                     <ul className="text-lg list-disc list-inside text-center">
                         {details.map((item, index) => (
