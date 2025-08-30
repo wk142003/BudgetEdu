@@ -1,3 +1,4 @@
+// src/components/Disadvantages/Quiz.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -10,49 +11,55 @@ const Quiz = () => {
     'No issues with budgeting',
   ];
 
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState('');
   const [otherInput, setOtherInput] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [aggregatedResults, setAggregatedResults] = useState({});
   const [otherResponses, setOtherResponses] = useState([]);
 
-  // Fetch other responses on mount
   useEffect(() => {
-    axios.get('http://localhost:5000/api/other-responses')
-      .then((response) => setOtherResponses(response.data))
-      .catch((error) => console.error('Error fetching responses:', error));
-  }, []);
+    if (submitted) {
+      fetchResponses();
+    }
+  }, [submitted]);
 
-  const handleSelect = (option) => {
-    setSelected((prev) =>
-      prev.includes(option)
-        ? prev.filter((item) => item !== option)
-        : [...prev, option]
-    );
+  const fetchResponses = () => {
+    axios.get('http://localhost:5000/api/other-responses')
+      .then((response) => {
+        const submissions = response.data;
+        const counts = {};
+        options.forEach(opt => (counts[opt] = 0));
+        const others = [];
+        submissions.forEach(sub => {
+          const opt = sub.selected;
+          if (options.includes(opt)) {
+            counts[opt]++;
+          } else {
+            others.push(opt);
+          }
+        });
+        setAggregatedResults(counts);
+        setOtherResponses(others);
+      })
+      .catch((error) => console.error('Error fetching responses:', error));
   };
 
-  const handleOtherSubmit = () => {
-    if (otherInput.trim()) {
-      const newResponse = otherInput.trim();
-      setSelected((prev) => [...prev, newResponse]);
-      setOtherInput('');
-      // Save to backend
-      axios.post('http://localhost:5000/api/other-responses', { response: newResponse })
+  const handleSubmit = () => {
+    let selectedOption = selected === 'Other' ? otherInput.trim() : selected;
+    if (selectedOption) {
+      axios.post('http://localhost:5000/api/other-responses', { selected: selectedOption })
+        .then(() => {
+          setSubmitted(true);
+        })
         .catch((error) => console.error('Error saving response:', error));
     }
   };
 
-  const handleSubmit = () => {
-    setSubmitted(true);
-  };
-
   const calculatePercentages = () => {
-    const total = selected.length || 1; // Avoid division by zero
-    const counts = {};
-    options.forEach((opt) => (counts[opt] = 0));
-    selected.forEach((opt) => (counts[opt] = (counts[opt] || 0) + 1));
-    return Object.entries(counts).map(([opt, count]) => ({
+    const total = Object.values(aggregatedResults).reduce((a, b) => a + b, 0) || 0;
+    return options.map(opt => ({
       option: opt,
-      percentage: (count / total) * 100,
+      percentage: total === 0 ? 0 : (aggregatedResults[opt] / total) * 100,
     }));
   };
 
@@ -65,42 +72,52 @@ const Quiz = () => {
         {options.map((option) => (
           <label key={option} className="block mb-2">
             <input
-              type="checkbox"
-              checked={selected.includes(option)}
-              onChange={() => handleSelect(option)}
+              type="radio"
+              checked={selected === option}
+              onChange={() => setSelected(option)}
               className="mr-2"
             />
             {option}
           </label>
         ))}
-        <input
-          type="text"
-          value={otherInput}
-          onChange={(e) => setOtherInput(e.target.value)}
-          placeholder="Other challenges..."
-          className="w-full p-2 border border-gray-300 rounded mb-2"
-        />
-        <button
-          onClick={handleOtherSubmit}
-          className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 disabled:opacity-50"
-          disabled={!otherInput.trim()}
-        >
-          Add Other
-        </button>
+        <label className="block mb-2">
+          <input
+            type="radio"
+            checked={selected === 'Other'}
+            onChange={() => setSelected('Other')}
+            className="mr-2"
+          />
+          Other
+        </label>
+        {selected === 'Other' && (
+          <input
+            type="text"
+            value={otherInput}
+            onChange={(e) => setOtherInput(e.target.value)}
+            placeholder="Enter your challenge..."
+            className="w-full p-2 border border-gray-300 rounded mb-2"
+          />
+        )}
       </div>
       <button
         onClick={handleSubmit}
         className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 disabled:opacity-50"
-        disabled={selected.length === 0}
+        disabled={!selected || (selected === 'Other' && !otherInput.trim())}
       >
         Submit
       </button>
       {submitted && (
         <div className="mt-4">
-          <h4 className="text-xl font-semibold mb-2">Your Results</h4>
+          <h4 className="text-xl font-semibold mb-2">Your Selection</h4>
+          <p>{selected === 'Other' ? otherInput : selected}</p>
+        </div>
+      )}
+      {submitted && (
+        <div className="mt-4">
+          <h4 className="text-xl font-semibold mb-2">What Others Chose</h4>
           {calculatePercentages().map(({ option, percentage }) => (
             <div key={option} className="mb-2">
-              <span>{option}: {percentage.toFixed(1)}%</span>
+              <span>{option} ({percentage.toFixed(1)}%)</span>
               <div className="w-full bg-gray-200 rounded h-4">
                 <div
                   className="bg-blue-500 h-4 rounded"
@@ -111,12 +128,12 @@ const Quiz = () => {
           ))}
         </div>
       )}
-      {otherResponses.length > 0 && (
+      {submitted && otherResponses.length > 0 && (
         <div className="mt-4">
-          <h4 className="text-xl font-semibold mb-2">Community Challenges</h4>
+          <h4 className="text-xl font-semibold mb-2">Other Challenges from Community</h4>
           <ul className="text-sm list-disc list-inside">
             {otherResponses.slice(0, 5).map((response, index) => (
-              <li key={index}>{response.response}</li>
+              <li key={index}>{response}</li>
             ))}
           </ul>
         </div>

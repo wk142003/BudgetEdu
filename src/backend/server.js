@@ -1,3 +1,7 @@
+// src/backend/server.js
+/* eslint-env node */
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -7,22 +11,29 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://woonkin23:LttYtSFCSEy5kJdD@cluster0.ys6digw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+})
+.then(() => {
+  console.log("✅ MongoDB connected");
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+})
+.catch((err) => {
+  console.error("❌ MongoDB connection error:", err);
 });
 
 // Schema and Model
-const ResponseSchema = new mongoose.Schema({
-  response: { type: String, required: true },
+const SubmissionSchema = new mongoose.Schema({
+  selected: { type: String, required: true },
 });
-const Response = mongoose.model('Response', ResponseSchema);
+const Submission = mongoose.model('Submission', SubmissionSchema);
 
 // Routes
 app.get('/api/other-responses', async (req, res) => {
   try {
-    const responses = await Response.find();
-    res.json(responses);
+    const submissions = await Submission.find();
+    res.json(submissions);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server error' });
@@ -31,11 +42,11 @@ app.get('/api/other-responses', async (req, res) => {
 
 app.post('/api/other-responses', async (req, res) => {
   try {
-    const { response } = req.body;
-    if (!response) return res.status(400).json({ error: 'Response required' });
-    const newResponse = new Response({ response });
-    await newResponse.save();
-    res.status(201).json(newResponse);
+    const { selected } = req.body;
+    if (!selected) return res.status(400).json({ error: 'Selected required' });
+    const newSubmission = new Submission({ selected });
+    await newSubmission.save();
+    res.status(201).json(newSubmission);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server error' });
