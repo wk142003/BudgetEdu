@@ -2,3 +2,24 @@
 
 /* optional: small helpers */
 :root { color-scheme: light dark; }
+
+/* include missing CSS utilities */
+/* Perspective utility */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+/* Preserve 3D space for children */
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* Hide backside when rotated */
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Rotate around Y-axis */
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
