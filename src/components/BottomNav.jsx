@@ -30,8 +30,8 @@ const BottomNav = () => {
                     onClick={event => !prevPage && event.preventDefault()}
                 >
                     {/*renders as <*/}
-                    <span className="text-6xl">&lt;</span>
-                    <span className="text-2xl mt-1">{prevPage ? prevPage.name : ''}</span>
+                    <span className="text-5xl">&lt;</span>
+                    <span className="text-xl mt-1">{prevPage ? prevPage.name : 'No Previous Page'}</span>
                 </Link>
 
                 {/*Next Button*/}
@@ -42,8 +42,8 @@ const BottomNav = () => {
                     }`}
                     onClick={event => !nextPage && event.preventDefault()}
                 >
-                    <span className="text-6xl">&gt;</span>
-                    <span className="text-2xl mt-1">{nextPage ? nextPage.name : ''}</span>
+                    <span className="text-5xl">&gt;</span>
+                    <span className="text-xl mt-1">{nextPage ? nextPage.name : 'No Next Page'}</span>
                 </Link>
             </div>
         </nav>
