@@ -1,7 +1,7 @@
 // src/components/BudgetingStrategies/StrategiesGrid.jsx
 import React from 'react';
 import StrategyCard from './StrategyCard';
-import strategies from './strategiesData';
+import strategies from './StrategiesData';
 
 const StrategiesGrid = () => {
   return (
