@@ -24,7 +24,7 @@ const Quiz = () => {
   }, [submitted]);
 
   const fetchResponses = () => {
-    axios.get('http://localhost:5000/api/other-responses')
+    axios.get('http://localhost:10000/api/other-responses')
       .then((response) => {
         const submissions = response.data;
         const counts = {};
@@ -47,7 +47,7 @@ const Quiz = () => {
   const handleSubmit = () => {
     let selectedOption = selected === 'Other' ? otherInput.trim() : selected;
     if (selectedOption) {
-      axios.post('http://localhost:5000/api/other-responses', { selected: selectedOption })
+      axios.post('http://localhost:10000/api/other-responses', { selected: selectedOption })
         .then(() => {
           setSubmitted(true);
         })
