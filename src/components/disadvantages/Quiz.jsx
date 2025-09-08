@@ -2,6 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+// src/api.js or wherever you make fetch calls
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:10000";
+
 const Quiz = () => {
   const options = [
     'Inconsistent Budgeting',
@@ -24,7 +27,7 @@ const Quiz = () => {
   }, [submitted]);
 
   const fetchResponses = () => {
-    axios.get('http://localhost:10000/api/other-responses')
+    axios.get(`${API_BASE}/api/other-responses`)
       .then((response) => {
         const submissions = response.data;
         const counts = {};
@@ -47,7 +50,7 @@ const Quiz = () => {
   const handleSubmit = () => {
     let selectedOption = selected === 'Other' ? otherInput.trim() : selected;
     if (selectedOption) {
-      axios.post('http://localhost:10000/api/other-responses', { selected: selectedOption })
+      axios.post(`${API_BASE}/api/other-responses`, { selected: selectedOption })
         .then(() => {
           setSubmitted(true);
         })

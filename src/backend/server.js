@@ -6,7 +6,15 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 
+// using express backend to serve frontend and handle API requests
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
@@ -50,4 +58,10 @@ app.post('/api/other-responses', async (req, res) => {
     console.error(error);
     res.status(500).json({ error: 'Server error' });
   }
+});
+
+// Serve frontend AFTER API
+app.use(express.static(path.join(__dirname, "../../dist")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../../dist", "index.html"));
 });
